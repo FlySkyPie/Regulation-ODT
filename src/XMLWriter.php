@@ -29,8 +29,8 @@ class XMLWriter {
    * @param array $attributes
    * @return \DOMElement
    */
-  protected function createNewElement(string $tagName, array $attributes): \DOMElement {
-    $newNode = $this->domDocument->createElement($tagName);
+  protected function createNewElement(string $tagName, array $attributes=[],string $value=NULL): \DOMElement {
+    $newNode = $this->domDocument->createElement($tagName,$value);
     foreach ($attributes as $key => $value) {
       $newNode->setAttribute($key, $value);
     }
