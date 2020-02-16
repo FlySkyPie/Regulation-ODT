@@ -2,12 +2,6 @@
 
 namespace FlySkyPie\RegulationODText;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of StylesXMLWriter
  *
@@ -75,6 +69,32 @@ class StylesXMLWriter {
 
     $stylesElement->appendChild($this->getStyleDefaultStyle());
     $stylesElement->appendChild($this->getTitleStyle());
+    $stylesElement->appendChild($this->getHistoriesStyle());
+  }
+
+  private function getHistoriesStyle() {
+    $styleNode = $this->createNewElement('style:style', ['style:name' => '法規歷程', 'style:family' => 'paragraph']);
+
+    $styleParagraphPropertiesAttribute = [
+        'fo:margin-top' => '0cm',
+        'fo:margin-bottom' => '0cm',
+        'fo:text-align' => 'end'
+    ];
+    $styleParagraphPropertiesElement = $this->createNewElement(
+            'style:paragraph-properties', $styleParagraphPropertiesAttribute);
+
+
+    $styleTextPropertiesAttribute = [
+        'fo:font-size' => '8pt',
+        'style:font-size-asian' => '8pt'
+    ];
+
+    $styleTextPropertiesElement = $this->createNewElement(
+            'style:text-properties', $styleTextPropertiesAttribute);
+
+    $styleNode->appendChild($styleParagraphPropertiesElement);
+    $styleNode->appendChild($styleTextPropertiesElement);
+    return $styleNode;
   }
 
   private function getTitleStyle() {
@@ -90,19 +110,8 @@ class StylesXMLWriter {
 
 
     $styleTextPropertiesAttribute = [
-        'style:use-window-font-color' => 'true',
-        'style:font-name' => 'Times New Roman',
         'fo:font-size' => '24pt',
-        'fo:language' => 'en',
-        'fo:country' => 'US',
-        'style:letter-kerning' => 'true',
-        'style:font-name-asian' => 'DFKai-sb',
-        'style:font-size-asian' => '25pt',
-        'style:language-asian' => 'zh',
-        'style:country-asian' => 'TW',
-        'fo:hyphenate' => 'false',
-        'fo:hyphenation-remain-char-count' => '2',
-        'fo:hyphenation-push-char-count' => '2'
+        'style:font-size-asian' => '24pt'
     ];
 
     $styleTextPropertiesElement = $this->createNewElement(
@@ -204,8 +213,8 @@ class StylesXMLWriter {
         'style:print-orientation' => 'portrait',
         'fo:margin-top' => '2.501cm',
         'fo:margin-bottom' => '2cm',
-        'fo:margin-left' => '2.501cm',
-        'fo:margin-right' => '2.501cm',
+        'fo:margin-left' => '2cm',
+        'fo:margin-right' => '2cm',
         'style:writing-mode' => 'lr-tb',
         'style:layout-grid-color' => '#c0c0c0',
         'style:layout-grid-lines' => '25199',
