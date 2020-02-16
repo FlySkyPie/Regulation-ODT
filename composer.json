@@ -1,0 +1,21 @@
+{
+    "name": "flyskypie/regulation-odt",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "FlySkyPie(Wei Ji)",
+            "email": "c445dj544@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload":{
+        "psr-4": {
+            "FlySkyPie\\RegulationODText\\":"src/"
+        }
+    },
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "8.5.x-dev"
+    }
+}
