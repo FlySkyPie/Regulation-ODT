@@ -41,6 +41,7 @@ class StyleLoader implements StyleLoaderInterface {
     $this->addHistoriesStyleTo($parent);
     $this->addChapterStyleTo($parent);
     $this->addArticleStyleTo($parent);
+    $this->addParagraphStyleTo($parent);
     $this->addRegulationStyleTo($parent);
   }
 
@@ -143,6 +144,23 @@ class StyleLoader implements StyleLoaderInterface {
     $parent->appendChild($styleNode);
   }
 
+  private function addParagraphStyleTo(\DOMElement $parent) {
+    $attributes = ['style:name' => '法規項次', 'style:family' => 'text'];
+    $styleNode = $this->createElementWithAttribute('style:style', $attributes);
+
+    $styleTextPropertiesAttribute = [
+        'fo:font-size' => '12pt',
+        'style:font-size-asian' => '12pt',
+    ];
+
+    $styleTextPropertiesElement = $this->createElementWithAttribute(
+            'style:text-properties', $styleTextPropertiesAttribute);
+
+
+    $styleNode->appendChild($styleTextPropertiesElement);
+    $parent->appendChild($styleNode);
+  }
+
   private function addRegulationStyleTo(\DOMElement $parent) {
     $attributes = ['style:name' => '法規本文'];
     $styleNode = $this->createElementWithAttribute('text:list-style', $attributes);
@@ -159,8 +177,7 @@ class StyleLoader implements StyleLoaderInterface {
         ['text:style-name' => '法規條款',
             'style:num-format' => ''],
         ['text:style-name' => '法規條款',
-            'style:num-prefix' => '第',
-            'style:num-suffix' => '款、',
+            'style:num-suffix' => '、',
             'style:num-format' => '一, 二, 三, ...'],
         ['text:style-name' => '法規條款',
             'style:num-prefix' => '（',
@@ -172,19 +189,15 @@ class StyleLoader implements StyleLoaderInterface {
             'style:num-format' => '1, 2, 3, ...']
     ];
     $alignmentAttributes = [
-        [], [],
-        ['text:list-tab-stop-position' => '1in',
-            'fo:text-indent' => '-0.25in',
-            'fo:margin-left' => '1in'],
-        ['text:list-tab-stop-position' => '1.5in',
-            'fo:text-indent' => '-0.25in',
+        [], ['fo:margin-left' => '0.75in',
+            'fo:text-indent' => '-0.75in'],
+        ['fo:margin-left' => '0.75in'],
+        ['fo:text-indent' => '-0.5in',
             'fo:margin-left' => '1.5in'],
-        ['text:list-tab-stop-position' => '2in',
-            'fo:text-indent' => '-0.25in',
+        ['fo:text-indent' => '-0.75in',
             'fo:margin-left' => '2in'],
-        ['text:list-tab-stop-position' => '2.5in',
-            'fo:text-indent' => '-0.25in',
-            'fo:margin-left' => '2.5in']
+        ['fo:text-indent' => '-0.5in',
+            'fo:margin-left' => '2.25in']
     ];
 
     for ($i = 0; $i < 6; $i++) {
