@@ -10,6 +10,10 @@ use FlySkyPie\RegulationODText\StyleLoaderInterface;
  * @author flyskypie
  */
 class StyleLoader implements StyleLoaderInterface {
+
+  /**
+   * @var \DOMDocument
+   */
   private $document;
 
   public function addFontFaceTo(\DOMElement $parent) {
@@ -36,6 +40,8 @@ class StyleLoader implements StyleLoaderInterface {
     $this->addTitleStyleTo($parent);
     $this->addHistoriesStyleTo($parent);
     $this->addChapterStyleTo($parent);
+    $this->addArticleStyleTo($parent);
+    $this->addRegulationStyleTo($parent);
   }
 
   private function addStyleDefaultStyleTo(\DOMElement $parent) {
@@ -118,6 +124,91 @@ class StyleLoader implements StyleLoaderInterface {
 
     $styleNode->appendChild($styleTextPropertiesElement);
     $parent->appendChild($styleNode);
+  }
+
+  private function addArticleStyleTo(\DOMElement $parent) {
+    $attributes = ['style:name' => '法規條款', 'style:family' => 'text'];
+    $styleNode = $this->createElementWithAttribute('style:style', $attributes);
+
+    $styleTextPropertiesAttribute = [
+        'fo:font-size' => '14pt',
+        'style:font-size-asian' => '14pt',
+    ];
+
+    $styleTextPropertiesElement = $this->createElementWithAttribute(
+            'style:text-properties', $styleTextPropertiesAttribute);
+
+
+    $styleNode->appendChild($styleTextPropertiesElement);
+    $parent->appendChild($styleNode);
+  }
+
+  private function addRegulationStyleTo(\DOMElement $parent) {
+    $attributes = ['style:name' => '法規本文'];
+    $styleNode = $this->createElementWithAttribute('text:list-style', $attributes);
+
+    $numberAttributes = [
+        ['text:style-name' => '法規章節',
+            'style:num-prefix' => '第',
+            'style:num-suffix' => '章',
+            'style:num-format' => '一, 二, 三, ...'],
+        ['text:style-name' => '法規條款',
+            'style:num-prefix' => '第',
+            'style:num-suffix' => '條',
+            'style:num-format' => '一, 二, 三, ...'],
+        ['text:style-name' => '法規條款',
+            'style:num-format' => ''],
+        ['text:style-name' => '法規條款',
+            'style:num-prefix' => '第',
+            'style:num-suffix' => '款、',
+            'style:num-format' => '一, 二, 三, ...'],
+        ['text:style-name' => '法規條款',
+            'style:num-prefix' => '（',
+            'style:num-suffix' => '）',
+            'style:num-format' => '一, 二, 三, ...'],
+        ['text:style-name' => '法規條款',
+            //'style:num-prefix' => '',
+            'style:num-suffix' => '、',
+            'style:num-format' => '1, 2, 3, ...']
+    ];
+    $alignmentAttributes = [
+        [], [],
+        ['text:list-tab-stop-position' => '1in',
+            'fo:text-indent' => '-0.25in',
+            'fo:margin-left' => '1in'],
+        ['text:list-tab-stop-position' => '1.5in',
+            'fo:text-indent' => '-0.25in',
+            'fo:margin-left' => '1.5in'],
+        ['text:list-tab-stop-position' => '2in',
+            'fo:text-indent' => '-0.25in',
+            'fo:margin-left' => '2in'],
+        ['text:list-tab-stop-position' => '2.5in',
+            'fo:text-indent' => '-0.25in',
+            'fo:margin-left' => '2.5in']
+    ];
+
+    for ($i = 0; $i < 6; $i++) {
+      $level = $i + 1;
+      $levelElement = $this->createListLevelStyle($level, $numberAttributes[$i], $alignmentAttributes[$i]);
+
+      $styleNode->appendChild($levelElement);
+    }
+
+    $parent->appendChild($styleNode);
+  }
+
+  private function createListLevelStyle(int $level, array $numberAttributes, array $alignmentAttributes) {
+    $numberAttributes['text:level'] = \strval($level);
+    $propertiesAttributes = ['text:list-level-position-and-space-mode' => 'label-alignment'];
+    $alignmentAttributes['text:label-followed-by'] = 'listtab';
+
+    $element3 = $this->createElementWithAttribute('style:list-level-label-alignment', $alignmentAttributes);
+    $element2 = $this->createElementWithAttribute('style:list-level-properties', $propertiesAttributes);
+    $element1 = $this->createElementWithAttribute('text:list-level-style-number', $numberAttributes);
+
+    $element2->appendChild($element3);
+    $element1->appendChild($element2);
+    return $element1;
   }
 
   private function createDefaultParagraphPropertiesElement(): \DOMElement {
