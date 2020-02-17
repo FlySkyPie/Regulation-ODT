@@ -40,7 +40,6 @@ class MetaXMLWriter extends XMLWriter {
 
   private function addMetas(\DOMElement $parent) {
     $date = date('Y-m-d\TH:i:s.v');
-    print($date);
     $this->addMeta($parent, 'dc:title', '');
     $this->addMeta($parent, 'dc:subject', '');
     $this->addMeta($parent, 'dc:description', '');

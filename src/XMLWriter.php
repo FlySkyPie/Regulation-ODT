@@ -27,6 +27,7 @@ class XMLWriter {
    * 
    * @param string $tagName
    * @param array $attributes
+   * @param string $value
    * @return \DOMElement
    */
   protected function createNewElement(string $tagName, array $attributes=[],string $value=NULL): \DOMElement {

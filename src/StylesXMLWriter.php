@@ -2,103 +2,138 @@
 
 namespace FlySkyPie\RegulationODText;
 
+use FlySkyPie\RegulationODText\XMLWriter;
+
 /**
  * Description of StylesXMLWriter
  *
  * @author flyskypie
  */
-class StylesXMLWriter {
+class StylesXMLWriter extends XMLWriter {
 
-  private $domDocument;
   private $rootElement;
 
   public function __construct() {
-    $this->domDocument = new \DomDocument('1.0', 'UTF-8');
+    parent::__construct();
 
-    $this->createRootElement();
-    $this->createFontFaceDeculation();
-    $this->createStyles();
-    $this->createAutomaticStyles();
-    $this->createMasterStyles();
-  }
-
-  public function getString(): string {
-    //$this->domDocument->formatOutput = true;
-    return $this->domDocument->saveXML();
+    $rootElement = $this->createRootElement();
+    $this->addFontFaceDeculationTo($rootElement);
+    $this->addStylesTo($rootElement);
+    $this->addAutomaticStylesTo($rootElement);
+    $this->addMasterStylesTo($rootElement);
   }
 
   /**
    * Declared specification version and XML namespaces.
    */
-  private function createRootElement() {
-    $newNode = $this->domDocument->createElement('office:document-styles');
-    $rootElement = $this->domDocument->appendChild($newNode);
-    $rootElement->setAttribute('office:version', '1.2');
-    $rootElement->setAttribute('xmlns:office', 'urn:oasis:names:tc:opendocument:xmlns:office:1.0');
-    $rootElement->setAttribute('xmlns:style', 'urn:oasis:names:tc:opendocument:xmlns:style:1.0');
-    $rootElement->setAttribute('xmlns:text', 'urn:oasis:names:tc:opendocument:xmlns:text:1.0');
-    $rootElement->setAttribute('xmlns:table', 'urn:oasis:names:tc:opendocument:xmlns:table:1.0');
-    $rootElement->setAttribute('xmlns:draw', 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0');
-    $rootElement->setAttribute('xmlns:fo', 'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0');
-    $rootElement->setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
-    $rootElement->setAttribute('xmlns:dc', 'http://purl.org/dc/elements/1.1/');
-    $rootElement->setAttribute('xmlns:meta', 'urn:oasis:names:tc:opendocument:xmlns:meta:1.0');
-    $rootElement->setAttribute('xmlns:number', 'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0');
-    $rootElement->setAttribute('xmlns:svg', 'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0');
-    $rootElement->setAttribute('xmlns:chart', 'urn:oasis:names:tc:opendocument:xmlns:chart:1.0');
-    $rootElement->setAttribute('xmlns:dr3d', 'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0');
-    $rootElement->setAttribute('xmlns:math', 'http://www.w3.org/1998/Math/MathML');
-    $rootElement->setAttribute('xmlns:form', 'urn:oasis:names:tc:opendocument:xmlns:form:1.0');
-    $rootElement->setAttribute('xmlns:script', 'urn:oasis:names:tc:opendocument:xmlns:script:1.0');
-    $rootElement->setAttribute('xmlns:ooo', 'http://openoffice.org/2004/office');
-    $rootElement->setAttribute('xmlns:ooow', 'http://openoffice.org/2004/writer');
-    $rootElement->setAttribute('xmlns:oooc', 'http://openoffice.org/2004/calc');
-    $rootElement->setAttribute('xmlns:dom', 'http://www.w3.org/2001/xml-events');
-    $rootElement->setAttribute('xmlns:rpt', 'http://openoffice.org/2005/report');
-    $rootElement->setAttribute('xmlns:of', 'urn:oasis:names:tc:opendocument:xmlns:of:1.2');
-    $rootElement->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
-    $rootElement->setAttribute('xmlns:grddl', 'http://www.w3.org/2003/g/data-view#');
-    $rootElement->setAttribute('xmlns:tableooo', 'http://openoffice.org/2009/table');
-    $rootElement->setAttribute('xmlns:css3t', 'http://www.w3.org/TR/css3-text/');
-    $this->rootElement = $rootElement;
+  private function createRootElement(): \DOMElement {
+    $attribute = [
+        'office:version' => '1.2',
+        'xmlns:office' => 'urn:oasis:names:tc:opendocument:xmlns:office:1.0',
+        'xmlns:style' => 'urn:oasis:names:tc:opendocument:xmlns:style:1.0',
+        'xmlns:text' => 'urn:oasis:names:tc:opendocument:xmlns:text:1.0',
+        'xmlns:table' => 'urn:oasis:names:tc:opendocument:xmlns:table:1.0',
+        'xmlns:draw' => 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0',
+        'xmlns:fo' => 'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0',
+        'xmlns:xlink' => 'http://www.w3.org/1999/xlink',
+        'xmlns:dc' => 'http://purl.org/dc/elements/1.1/',
+        'xmlns:meta' => 'urn:oasis:names:tc:opendocument:xmlns:meta:1.0',
+        'xmlns:number' => 'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0',
+        'xmlns:svg' => 'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0',
+        'xmlns:chart' => 'urn:oasis:names:tc:opendocument:xmlns:chart:1.0',
+        'xmlns:dr3d' => 'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0',
+        'xmlns:math' => 'http://www.w3.org/1998/Math/MathML',
+        'xmlns:form' => 'urn:oasis:names:tc:opendocument:xmlns:form:1.0',
+        'xmlns:script' => 'urn:oasis:names:tc:opendocument:xmlns:script:1.0',
+        'xmlns:ooo' => 'http://openoffice.org/2004/office',
+        'xmlns:ooow' => 'http://openoffice.org/2004/writer',
+        'xmlns:oooc' => 'http://openoffice.org/2004/calc',
+        'xmlns:dom' => 'http://www.w3.org/2001/xml-events',
+        'xmlns:rpt' => 'http://openoffice.org/2005/report',
+        'xmlns:of' => 'urn:oasis:names:tc:opendocument:xmlns:of:1.2',
+        'xmlns:xhtml' => 'http://www.w3.org/1999/xhtml',
+        'xmlns:grddl' => 'http://www.w3.org/2003/g/data-view#',
+        'xmlns:tableooo' => 'http://openoffice.org/2009/table',
+        'xmlns:css3t' => 'http://www.w3.org/TR/css3-text/'];
+
+    $element = $this->createNewElement('office:document-styles', $attribute);
+    $rootElement = $this->getDocument()->appendChild($element);
+
+    return $rootElement;
   }
 
-  private function createStyles() {
-    $newNode = $this->domDocument->createElement('office:styles');
-    $stylesElement = $this->rootElement->appendChild($newNode);
+  /**
+   * Declare typefaces. 
+   */
+  private function addFontFaceDeculationTo(\DOMElement $parent) {
+    $fontFaceDeclsElement = $this->createNewElement('office:font-face-decls');
 
-    $stylesElement->appendChild($this->getStyleDefaultStyle());
-    $stylesElement->appendChild($this->getTitleStyle());
-    $stylesElement->appendChild($this->getHistoriesStyle());
-  }
-
-  private function getHistoriesStyle() {
-    $styleNode = $this->createNewElement('style:style', ['style:name' => '法規歷程', 'style:family' => 'paragraph']);
-
-    $styleParagraphPropertiesAttribute = [
-        'fo:margin-top' => '0cm',
-        'fo:margin-bottom' => '0cm',
-        'fo:text-align' => 'end'
-    ];
-    $styleParagraphPropertiesElement = $this->createNewElement(
-            'style:paragraph-properties', $styleParagraphPropertiesAttribute);
-
-
-    $styleTextPropertiesAttribute = [
-        'fo:font-size' => '8pt',
-        'style:font-size-asian' => '8pt'
+    $fontFaceAttributes = [
+        [
+            'style:name' => 'Times New Roman',
+            'svg:font-family' => 'Times New Roman'
+        ], [
+            'style:name' => 'DFKai-sb',
+            'svg:font-family' => 'DFKai-sb'
+        ]
     ];
 
-    $styleTextPropertiesElement = $this->createNewElement(
-            'style:text-properties', $styleTextPropertiesAttribute);
+    foreach ($fontFaceAttributes as $fontFaceAttribute) {
+      $fontFaceElement = $this->createNewElement('style:font-face', $fontFaceAttribute);
+      $fontFaceDeclsElement->appendChild($fontFaceElement);
+    }
 
-    $styleNode->appendChild($styleParagraphPropertiesElement);
-    $styleNode->appendChild($styleTextPropertiesElement);
-    return $styleNode;
+    $parent->appendChild($fontFaceDeclsElement);
   }
 
-  private function getTitleStyle() {
-    $styleNode = $this->createNewElement('style:style', ['style:name' => '法規標題', 'style:family' => 'paragraph']);
+  private function addStylesTo(\DOMElement $parent) {
+    $stylesElement = $this->createNewElement('office:styles');
+
+    $this->addStyleDefaultStyleTo($stylesElement);
+    $this->addTitleStyleTo($stylesElement);
+    $this->addHistoriesStyleTo($stylesElement);
+
+    $parent->appendChild($stylesElement);
+  }
+
+  /**
+   * automatic-styles>
+   */
+  private function addAutomaticStylesTo(\DOMElement $parent) {
+    $automaticStylesElement = $this->createNewElement('office:automatic-styles');
+
+    $stylePageLayoutElement = $this->createNewElement('style:page-layout', ['style:name' => 'Mpm1']);
+    $stylePageLayoutPropertiesElement = $this->getStylePageLayoutPropertiesElement();
+    $attributes = [
+        'style:width' => '0.018cm',
+        'style:line-style' => 'solid',
+        'style:adjustment' => 'left',
+        'style:rel-width' => '25%',
+        'style:color' => '#000000'];
+
+    $stylePootnoteSepElement = $this->createNewElement('style:footnote-sep', $attributes);
+    $stylePageLayoutPropertiesElement->appendChild($stylePootnoteSepElement);
+    $stylePageLayoutElement->appendChild($stylePageLayoutPropertiesElement);
+    $automaticStylesElement->appendChild($stylePageLayoutElement);
+    $parent->appendChild($automaticStylesElement);
+  }
+
+  private function addMasterStylesTo(\DOMElement $parent) {
+    $masterStylesElement = $this->createNewElement('office:master-styles');
+
+    $attributes = [
+        'style:name' => 'Standard',
+        'style:page-layout-name' => 'Mpm1'
+    ];
+
+    $masterPageStyleElement = $this->createNewElement('style:master-page', $attributes);
+    $masterStylesElement->appendChild($masterPageStyleElement);
+    $parent->appendChild($masterStylesElement);
+  }
+
+  private function addTitleStyleTo(\DOMElement $parent) {
+    $attributes = ['style:name' => '法規標題', 'style:family' => 'paragraph'];
+    $styleNode = $this->createNewElement('style:style', $attributes);
 
     $styleParagraphPropertiesAttribute = [
         'fo:margin-top' => '0cm',
@@ -119,12 +154,37 @@ class StylesXMLWriter {
 
     $styleNode->appendChild($styleParagraphPropertiesElement);
     $styleNode->appendChild($styleTextPropertiesElement);
-    return $styleNode;
+    $parent->appendChild($styleNode);
   }
 
-  private function getStyleDefaultStyle(): \DOMElement {
-    $styleDefaultStyleAttribute = ['style:family' => 'paragraph'];
+  private function addHistoriesStyleTo(\DOMElement $parent) {
+    $attributes = ['style:name' => '法規歷程', 'style:family' => 'paragraph'];
+    $styleNode = $this->createNewElement('style:style', $attributes);
 
+    $styleParagraphPropertiesAttribute = [
+        'fo:margin-top' => '0cm',
+        'fo:margin-bottom' => '0cm',
+        'fo:text-align' => 'end'
+    ];
+    $styleParagraphPropertiesElement = $this->createNewElement(
+            'style:paragraph-properties', $styleParagraphPropertiesAttribute);
+
+
+    $styleTextPropertiesAttribute = [
+        'fo:font-size' => '8pt',
+        'style:font-size-asian' => '8pt'
+    ];
+
+    $styleTextPropertiesElement = $this->createNewElement(
+            'style:text-properties', $styleTextPropertiesAttribute);
+
+    $styleNode->appendChild($styleParagraphPropertiesElement);
+    $styleNode->appendChild($styleTextPropertiesElement);
+    $parent->appendChild($styleNode);
+  }
+
+  private function addStyleDefaultStyleTo(\DOMElement $parent) {
+    $styleDefaultStyleAttribute = ['style:family' => 'paragraph'];
     $styleDefaultStyleElement = $this->createNewElement('style:default-style', $styleDefaultStyleAttribute);
 
 
@@ -161,48 +221,7 @@ class StylesXMLWriter {
 
     $styleDefaultStyleElement->appendChild($styleParagraphPropertiesElement);
     $styleDefaultStyleElement->appendChild($styleTextPropertiesElement);
-    return $styleDefaultStyleElement;
-  }
-
-  /**
-   * Declare typefaces. 
-   */
-  private function createFontFaceDeculation() {
-    $newNode = $this->domDocument->createElement('office:font-face-decls');
-    $fontFaceDeclsElement = $this->rootElement->appendChild($newNode);
-
-    $fontFace = $this->domDocument->createElement('style:font-face');
-    $fontFace->setAttribute('style:name', 'Times New Roman');
-    $fontFace->setAttribute('svg:font-family', 'Times New Roman');
-
-    $fontFace2 = $this->domDocument->createElement('style:font-face');
-    $fontFace2->setAttribute('style:name', 'DFKai-sb');
-    $fontFace2->setAttribute('svg:font-family', 'DFKai-sb');
-
-    $fontFaceDeclsElement->appendChild($fontFace);
-    $fontFaceDeclsElement->appendChild($fontFace2);
-  }
-
-  /**
-   * automatic-styles>
-   */
-  private function createAutomaticStyles() {
-    $newNode = $this->domDocument->createElement('office:automatic-styles');
-    $automaticStylesElement = $this->rootElement->appendChild($newNode);
-
-    $stylePageLayoutElement = $this->createNewElement('style:page-layout', ['style:name' => 'Mpm1']);
-    $stylePageLayoutPropertiesElement = $this->getStylePageLayoutPropertiesElement();
-    $stylePootnoteSepElement = $this->domDocument->createElement('style:footnote-sep');
-
-    $stylePootnoteSepElement->setAttribute('style:width', '0.018cm');
-    $stylePootnoteSepElement->setAttribute('style:line-style', 'solid');
-    $stylePootnoteSepElement->setAttribute('style:adjustment', 'left');
-    $stylePootnoteSepElement->setAttribute('style:rel-width', '25%');
-    $stylePootnoteSepElement->setAttribute('style:color', '#000000');
-
-    $automaticStylesElement->appendChild($stylePageLayoutElement);
-    $stylePageLayoutElement->appendChild($stylePageLayoutPropertiesElement);
-    $stylePageLayoutPropertiesElement->appendChild($stylePootnoteSepElement);
+    $parent->appendChild($styleDefaultStyleElement);
   }
 
   private function getStylePageLayoutPropertiesElement() {
@@ -229,31 +248,6 @@ class StylesXMLWriter {
         'style:footnote-max-height' => '0cm'
     ];
     return $this->createNewElement('style:page-layout-properties', $attributes);
-  }
-
-  private function createMasterStyles() {
-    $newNode = $this->domDocument->createElement('office:master-styles');
-    $masterStylesElement = $this->rootElement->appendChild($newNode);
-
-    $masterPageStyle = $this->domDocument->createElement('style:master-page');
-    $masterPageStyle->setAttribute('style:name', 'Standard');
-    $masterPageStyle->setAttribute('style:page-layout-name', 'Mpm1');
-
-    $masterStylesElement->appendChild($masterPageStyle);
-  }
-
-  /**
-   * 
-   * @param string $tagName
-   * @param array $attributes
-   * @return \DOMElement
-   */
-  private function createNewElement(string $tagName, array $attributes): \DOMElement {
-    $newNode = $this->domDocument->createElement($tagName);
-    foreach ($attributes as $key => $value) {
-      $newNode->setAttribute($key, $value);
-    }
-    return $newNode;
   }
 
 }
