@@ -3,6 +3,7 @@
 namespace FlySkyPie\RegulationODText;
 
 use FlySkyPie\RegulationODText\XMLWriter;
+use FlySkyPie\RegulationODText\StyleLoaderInterface;
 
 /**
  * Description of StylesXMLWriter
@@ -11,10 +12,11 @@ use FlySkyPie\RegulationODText\XMLWriter;
  */
 class StylesXMLWriter extends XMLWriter {
 
-  private $rootElement;
+  private $loader;
 
-  public function __construct() {
+  public function __construct(StyleLoaderInterface $styleLoader) {
     parent::__construct();
+    $this->loader = $styleLoader;
 
     $rootElement = $this->createRootElement();
     $this->addFontFaceDeculationTo($rootElement);
@@ -68,20 +70,7 @@ class StylesXMLWriter extends XMLWriter {
   private function addFontFaceDeculationTo(\DOMElement $parent) {
     $fontFaceDeclsElement = $this->createNewElement('office:font-face-decls');
 
-    $fontFaceAttributes = [
-        [
-            'style:name' => 'Times New Roman',
-            'svg:font-family' => 'Times New Roman'
-        ], [
-            'style:name' => 'DFKai-sb',
-            'svg:font-family' => 'DFKai-sb'
-        ]
-    ];
-
-    foreach ($fontFaceAttributes as $fontFaceAttribute) {
-      $fontFaceElement = $this->createNewElement('style:font-face', $fontFaceAttribute);
-      $fontFaceDeclsElement->appendChild($fontFaceElement);
-    }
+    $this->loader->addFontFaceTo($fontFaceDeclsElement);
 
     $parent->appendChild($fontFaceDeclsElement);
   }
@@ -89,9 +78,7 @@ class StylesXMLWriter extends XMLWriter {
   private function addStylesTo(\DOMElement $parent) {
     $stylesElement = $this->createNewElement('office:styles');
 
-    $this->addStyleDefaultStyleTo($stylesElement);
-    $this->addTitleStyleTo($stylesElement);
-    $this->addHistoriesStyleTo($stylesElement);
+    $this->loader->addStylesTo($stylesElement);
 
     $parent->appendChild($stylesElement);
   }
@@ -129,99 +116,6 @@ class StylesXMLWriter extends XMLWriter {
     $masterPageStyleElement = $this->createNewElement('style:master-page', $attributes);
     $masterStylesElement->appendChild($masterPageStyleElement);
     $parent->appendChild($masterStylesElement);
-  }
-
-  private function addTitleStyleTo(\DOMElement $parent) {
-    $attributes = ['style:name' => '法規標題', 'style:family' => 'paragraph'];
-    $styleNode = $this->createNewElement('style:style', $attributes);
-
-    $styleParagraphPropertiesAttribute = [
-        'fo:margin-top' => '0cm',
-        'fo:margin-bottom' => '0cm',
-        'fo:text-align' => 'center'
-    ];
-    $styleParagraphPropertiesElement = $this->createNewElement(
-            'style:paragraph-properties', $styleParagraphPropertiesAttribute);
-
-
-    $styleTextPropertiesAttribute = [
-        'fo:font-size' => '24pt',
-        'style:font-size-asian' => '24pt'
-    ];
-
-    $styleTextPropertiesElement = $this->createNewElement(
-            'style:text-properties', $styleTextPropertiesAttribute);
-
-    $styleNode->appendChild($styleParagraphPropertiesElement);
-    $styleNode->appendChild($styleTextPropertiesElement);
-    $parent->appendChild($styleNode);
-  }
-
-  private function addHistoriesStyleTo(\DOMElement $parent) {
-    $attributes = ['style:name' => '法規歷程', 'style:family' => 'paragraph'];
-    $styleNode = $this->createNewElement('style:style', $attributes);
-
-    $styleParagraphPropertiesAttribute = [
-        'fo:margin-top' => '0cm',
-        'fo:margin-bottom' => '0cm',
-        'fo:text-align' => 'end'
-    ];
-    $styleParagraphPropertiesElement = $this->createNewElement(
-            'style:paragraph-properties', $styleParagraphPropertiesAttribute);
-
-
-    $styleTextPropertiesAttribute = [
-        'fo:font-size' => '8pt',
-        'style:font-size-asian' => '8pt'
-    ];
-
-    $styleTextPropertiesElement = $this->createNewElement(
-            'style:text-properties', $styleTextPropertiesAttribute);
-
-    $styleNode->appendChild($styleParagraphPropertiesElement);
-    $styleNode->appendChild($styleTextPropertiesElement);
-    $parent->appendChild($styleNode);
-  }
-
-  private function addStyleDefaultStyleTo(\DOMElement $parent) {
-    $styleDefaultStyleAttribute = ['style:family' => 'paragraph'];
-    $styleDefaultStyleElement = $this->createNewElement('style:default-style', $styleDefaultStyleAttribute);
-
-
-    $styleParagraphPropertiesAttribute = [
-        'fo:hyphenation-ladder-count' => 'no-limit',
-        'style:text-autospace' => 'ideograph-alpha',
-        'style:punctuation-wrap' => 'hanging',
-        'style:line-break' => 'strict',
-        'style:tab-stop-distance' => '1.249cm',
-        'style:writing-mode' => 'page'
-    ];
-    $styleParagraphPropertiesElement = $this->createNewElement(
-            'style:paragraph-properties', $styleParagraphPropertiesAttribute);
-
-
-    $styleTextPropertiesAttribute = [
-        'style:use-window-font-color' => 'true',
-        'style:font-name' => 'Times New Roman',
-        'fo:font-size' => '12pt',
-        'fo:language' => 'en',
-        'fo:country' => 'US',
-        'style:letter-kerning' => 'true',
-        'style:font-name-asian' => 'DFKai-sb',
-        'style:font-size-asian' => '12pt',
-        'style:language-asian' => 'zh',
-        'style:country-asian' => 'TW',
-        'fo:hyphenate' => 'false',
-        'fo:hyphenation-remain-char-count' => '2',
-        'fo:hyphenation-push-char-count' => '2'
-    ];
-
-    $styleTextPropertiesElement = $this->createNewElement(
-            'style:text-properties', $styleTextPropertiesAttribute);
-
-    $styleDefaultStyleElement->appendChild($styleParagraphPropertiesElement);
-    $styleDefaultStyleElement->appendChild($styleTextPropertiesElement);
-    $parent->appendChild($styleDefaultStyleElement);
   }
 
   private function getStylePageLayoutPropertiesElement() {
