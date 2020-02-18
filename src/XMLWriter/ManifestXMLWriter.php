@@ -1,8 +1,8 @@
 <?php
 
-namespace FlySkyPie\RegulationODText;
+namespace FlySkyPie\RegulationODText\XMLWriter;
 
-use FlySkyPie\RegulationODText\XMLWriter;
+use FlySkyPie\RegulationODText\XMLWriter\XMLWriter;
 
 /**
  * Description of ManifestXMLWriter
