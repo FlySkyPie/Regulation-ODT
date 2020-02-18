@@ -109,7 +109,7 @@ class StyleLoader implements StyleLoaderInterface {
   }
 
   private function addChapterStyleTo(\DOMElement $parent) {
-    $attributes = ['style:name' => '法規章節', 'style:family' => 'text'];
+    $attributes = ['style:name' => '法規章節（文字樣式）', 'style:family' => 'text'];
     $styleNode = $this->createElementWithAttribute('style:style', $attributes);
 
     $styleTextPropertiesAttribute = [
@@ -128,7 +128,7 @@ class StyleLoader implements StyleLoaderInterface {
   }
 
   private function addArticleStyleTo(\DOMElement $parent) {
-    $attributes = ['style:name' => '法規條款', 'style:family' => 'text'];
+    $attributes = ['style:name' => '法規條款（文字樣式）', 'style:family' => 'text'];
     $styleNode = $this->createElementWithAttribute('style:style', $attributes);
 
     $styleTextPropertiesAttribute = [
@@ -145,7 +145,7 @@ class StyleLoader implements StyleLoaderInterface {
   }
 
   private function addParagraphStyleTo(\DOMElement $parent) {
-    $attributes = ['style:name' => '法規項次', 'style:family' => 'text'];
+    $attributes = ['style:name' => '法規項次（文字樣式）', 'style:family' => 'text'];
     $styleNode = $this->createElementWithAttribute('style:style', $attributes);
 
     $styleTextPropertiesAttribute = [
@@ -166,25 +166,24 @@ class StyleLoader implements StyleLoaderInterface {
     $styleNode = $this->createElementWithAttribute('text:list-style', $attributes);
 
     $numberAttributes = [
-        ['text:style-name' => '法規章節',
+        ['text:style-name' => '法規章節（文字樣式）',
             'style:num-prefix' => '第',
             'style:num-suffix' => '章',
             'style:num-format' => '一, 二, 三, ...'],
-        ['text:style-name' => '法規條款',
+        ['text:style-name' => '法規條款（文字樣式）',
             'style:num-prefix' => '第',
             'style:num-suffix' => '條',
             'style:num-format' => '一, 二, 三, ...'],
-        ['text:style-name' => '法規條款',
+        ['text:style-name' => '法規項次（文字樣式）',
             'style:num-format' => ''],
-        ['text:style-name' => '法規條款',
+        ['text:style-name' => '法規項次（文字樣式）',
             'style:num-suffix' => '、',
             'style:num-format' => '一, 二, 三, ...'],
-        ['text:style-name' => '法規條款',
+        ['text:style-name' => '法規項次（文字樣式）',
             'style:num-prefix' => '（',
             'style:num-suffix' => '）',
             'style:num-format' => '一, 二, 三, ...'],
-        ['text:style-name' => '法規條款',
-            //'style:num-prefix' => '',
+        ['text:style-name' => '法規項次（文字樣式）',
             'style:num-suffix' => '、',
             'style:num-format' => '1, 2, 3, ...']
     ];
