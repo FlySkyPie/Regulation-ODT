@@ -24,15 +24,29 @@ class RegulationLoader implements RegulationLoaderInterface {
 
   /**
    *
-   * @var array
+   * @var bool
    */
-  private $histories = [];
+  private $captered;
 
   /**
    *
    * @var array
    */
-  private $regulations = [];
+  private $histories;
+
+  /**
+   *
+   * @var array
+   */
+  private $regulations;
+
+  public function __construct() {
+    $this->document = null;
+    $this->name = '';
+    $this->captered = false;
+    $this->histories = [];
+    $this->regulations = [];
+  }
 
   /**
    * This method should create a section containing regulation
@@ -58,8 +72,14 @@ class RegulationLoader implements RegulationLoaderInterface {
     $this->histories = $histories;
   }
 
-  public function setRagulations(array $regulations) {
-    $this->regulations = $regulations;
+  public function setRagulations(array $regulations, bool $chaptered) {
+    $this->captered = $chaptered;
+
+    if ($chaptered) {
+      $this->regulations = $regulations;
+    } else {
+      $this->regulations = ['' => $regulations];
+    }
   }
 
   private function addTitleElementTo(\DOMElement $parent) {
@@ -86,16 +106,19 @@ class RegulationLoader implements RegulationLoaderInterface {
     $element = $this->createElement('text:list', $attributes);
 
     foreach ($this->regulations as $subKey => $subArray) {
-      $subItemElement = $this->getListElement($subKey, $subArray);
+      $subItemElement = $this->getListElement($subKey, $subArray, 1);
       $element->appendChild($subItemElement);
     }
     $parent->appendChild($element);
   }
 
-  private function getListElement(string $key, array $array): \DOMElement {
-    $itemElement = $this->createElement('text:list-item');
+  private function getListElement(string $key, array $array, int $level): \DOMElement {
+    if (!$this->captered && $level === 1) {
+      $itemElement = $this->createElement('text:list-header');
+    } else {
+      $itemElement = $this->createElement('text:list-item');
+    }
     $textElement = $this->createElement('text:p', [], $key);
-
     $itemElement->appendChild($textElement);
 
     if (empty($array)) {
@@ -104,7 +127,7 @@ class RegulationLoader implements RegulationLoaderInterface {
     $listElement = $this->createElement('text:list');
     $itemElement->appendChild($listElement);
     foreach ($array as $subKey => $subArray) {
-      $subItemElement = $this->getListElement($subKey, $subArray);
+      $subItemElement = $this->getListElement($subKey, $subArray, $level + 1);
       $listElement->appendChild($subItemElement);
     }
     return $itemElement;
