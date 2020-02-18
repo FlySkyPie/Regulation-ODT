@@ -39,9 +39,12 @@ class StyleLoader implements StyleLoaderInterface {
     $this->addStyleDefaultStyleTo($parent);
     $this->addTitleStyleTo($parent);
     $this->addHistoriesStyleTo($parent);
+    $this->addChapterParagraphStyleTo($parent);
+    $this->addArticleParagraphStyleTo($parent);
+    $this->addListParagraphStyleTo($parent);
     $this->addChapterStyleTo($parent);
     $this->addArticleStyleTo($parent);
-    $this->addParagraphStyleTo($parent);
+    $this->addListStyleTo($parent);
     $this->addRegulationStyleTo($parent);
   }
 
@@ -108,6 +111,8 @@ class StyleLoader implements StyleLoaderInterface {
     $parent->appendChild($styleNode);
   }
 
+
+  
   private function addChapterStyleTo(\DOMElement $parent) {
     $attributes = ['style:name' => '法規章節（文字樣式）', 'style:family' => 'text'];
     $styleNode = $this->createElementWithAttribute('style:style', $attributes);
@@ -144,7 +149,7 @@ class StyleLoader implements StyleLoaderInterface {
     $parent->appendChild($styleNode);
   }
 
-  private function addParagraphStyleTo(\DOMElement $parent) {
+  private function addListStyleTo(\DOMElement $parent) {
     $attributes = ['style:name' => '法規項次（文字樣式）', 'style:family' => 'text'];
     $styleNode = $this->createElementWithAttribute('style:style', $attributes);
 
@@ -157,6 +162,75 @@ class StyleLoader implements StyleLoaderInterface {
             'style:text-properties', $styleTextPropertiesAttribute);
 
 
+    $styleNode->appendChild($styleTextPropertiesElement);
+    $parent->appendChild($styleNode);
+  }
+  
+  
+      private function addChapterParagraphStyleTo(\DOMElement $parent) {
+    $attributes = ['style:name' => '法規章節（段落樣式）', 'style:family' => 'paragraph'];
+    $styleNode = $this->createElementWithAttribute('style:style', $attributes);
+
+    $styleParagraphPropertiesAttribute = [];
+    $styleParagraphPropertiesElement = $this->createElementWithAttribute(
+            'style:paragraph-properties', $styleParagraphPropertiesAttribute);
+
+
+    $styleTextPropertiesAttribute = [
+        'fo:font-size' => '16pt',
+        'fo:font-weight' => 'bold',
+        'style:font-size-asian' => '16pt',
+        'style:font-weight-asian' => 'bold'
+    ];
+
+    $styleTextPropertiesElement = $this->createElementWithAttribute(
+            'style:text-properties', $styleTextPropertiesAttribute);
+
+    $styleNode->appendChild($styleParagraphPropertiesElement);
+    $styleNode->appendChild($styleTextPropertiesElement);
+    $parent->appendChild($styleNode);
+  }
+  
+      private function addArticleParagraphStyleTo(\DOMElement $parent) {
+    $attributes = ['style:name' => '法規條款（段落樣式）', 'style:family' => 'paragraph'];
+    $styleNode = $this->createElementWithAttribute('style:style', $attributes);
+
+    $styleParagraphPropertiesAttribute = [];
+    $styleParagraphPropertiesElement = $this->createElementWithAttribute(
+            'style:paragraph-properties', $styleParagraphPropertiesAttribute);
+
+
+    $styleTextPropertiesAttribute = [
+        'fo:font-size' => '14pt',
+        'style:font-size-asian' => '14pt',
+    ];
+
+    $styleTextPropertiesElement = $this->createElementWithAttribute(
+            'style:text-properties', $styleTextPropertiesAttribute);
+
+    $styleNode->appendChild($styleParagraphPropertiesElement);
+    $styleNode->appendChild($styleTextPropertiesElement);
+    $parent->appendChild($styleNode);
+  }
+  
+      private function addListParagraphStyleTo(\DOMElement $parent) {
+    $attributes = ['style:name' => '法規項次（段落樣式）', 'style:family' => 'paragraph'];
+    $styleNode = $this->createElementWithAttribute('style:style', $attributes);
+
+    $styleParagraphPropertiesAttribute = [];
+    $styleParagraphPropertiesElement = $this->createElementWithAttribute(
+            'style:paragraph-properties', $styleParagraphPropertiesAttribute);
+
+
+    $styleTextPropertiesAttribute = [
+        'fo:font-size' => '12pt',
+        'style:font-size-asian' => '12pt',
+    ];
+
+    $styleTextPropertiesElement = $this->createElementWithAttribute(
+            'style:text-properties', $styleTextPropertiesAttribute);
+
+    $styleNode->appendChild($styleParagraphPropertiesElement);
     $styleNode->appendChild($styleTextPropertiesElement);
     $parent->appendChild($styleNode);
   }

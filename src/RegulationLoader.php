@@ -118,7 +118,8 @@ class RegulationLoader implements RegulationLoaderInterface {
     } else {
       $itemElement = $this->createElement('text:list-item');
     }
-    $textElement = $this->createElement('text:p', [], $key);
+    $attribute = ['text:style-name' => $this->getStyleName($level)];
+    $textElement = $this->createElement('text:p', $attribute, $key);
     $itemElement->appendChild($textElement);
 
     if (empty($array)) {
@@ -131,6 +132,16 @@ class RegulationLoader implements RegulationLoaderInterface {
       $listElement->appendChild($subItemElement);
     }
     return $itemElement;
+  }
+
+  private function getStyleName(int $level): string {
+    if ($level === 1) {
+      return '法規章節（段落樣式）';
+    } else if ($level === 2) {
+      return '法規條款（段落樣式）';
+    } else {
+      return '法規項次（段落樣式）';
+    }
   }
 
   private function createElement(string $tagName, array $attributes = [], string $value = NULL): \DOMElement {
