@@ -39,6 +39,8 @@ class RegulationLoader implements RegulationLoaderInterface {
    * @var array
    */
   private $regulations;
+  private $articleCount;
+  private $countRest;
 
   public function __construct() {
     $this->document = null;
@@ -46,6 +48,8 @@ class RegulationLoader implements RegulationLoaderInterface {
     $this->captered = false;
     $this->histories = [];
     $this->regulations = [];
+    $this->articleCount = 0;
+    $this->countRest = false;
   }
 
   /**
@@ -113,11 +117,8 @@ class RegulationLoader implements RegulationLoaderInterface {
   }
 
   private function getListElement(string $key, array $array, int $level): \DOMElement {
-    if (!$this->captered && $level === 1) {
-      $itemElement = $this->createElement('text:list-header');
-    } else {
-      $itemElement = $this->createElement('text:list-item');
-    }
+    $itemElement = $this->getListItemElement($level);
+
     $attribute = ['text:style-name' => $this->getStyleName($level)];
     $textElement = $this->createElement('text:p', $attribute, $key);
     $itemElement->appendChild($textElement);
@@ -130,6 +131,26 @@ class RegulationLoader implements RegulationLoaderInterface {
     foreach ($array as $subKey => $subArray) {
       $subItemElement = $this->getListElement($subKey, $subArray, $level + 1);
       $listElement->appendChild($subItemElement);
+    }
+    return $itemElement;
+  }
+
+  private function getListItemElement(int $level): \DOMElement {
+    if ($level === 1) {
+      $this->countRest = true;
+    } else if ($level === 2) {
+      $this->articleCount += 1;
+    }
+
+    if (!$this->captered && $level === 1) {
+      $itemElement = $this->createElement('text:list-header');
+    } else {
+      $itemElement = $this->createElement('text:list-item');
+    }
+
+    if ($level === 2 && $this->countRest) {
+      $itemElement->setAttribute('text:start-value', strval($this->articleCount));
+      $this->countRest = false;
     }
     return $itemElement;
   }
