@@ -1,8 +1,8 @@
 <?php
 
-namespace FlySkyPie\RegulationODText;
+namespace FlySkyPie\RegulationODText\Loader;
 
-use FlySkyPie\RegulationODText\StyleLoaderInterface;
+use \FlySkyPie\RegulationODText\Loader\StyleLoaderInterface;
 
 /**
  * Description of StyleLoader

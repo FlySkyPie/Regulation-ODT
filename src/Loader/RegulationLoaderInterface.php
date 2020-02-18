@@ -1,6 +1,6 @@
 <?php
 
-namespace FlySkyPie\RegulationODText;
+namespace FlySkyPie\RegulationODText\Loader;
 
 /**
  *

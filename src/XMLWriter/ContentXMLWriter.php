@@ -3,7 +3,7 @@
 namespace FlySkyPie\RegulationODText\XMLWriter;
 
 use FlySkyPie\RegulationODText\XMLWriter\XMLWriter;
-use FlySkyPie\RegulationODText\RegulationLoaderInterface;
+use FlySkyPie\RegulationODText\Loader\RegulationLoaderInterface;
 
 /**
  * Description of ContentXMLWriter
