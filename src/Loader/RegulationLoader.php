@@ -94,7 +94,7 @@ class RegulationLoader implements RegulationLoaderInterface {
 
   private function addHistoriesElementTo(\DOMElement $parent) {
     $attributes = ['text:style-name' => '法規歷程'];
-    $element = $this->createElement('text:p', $attributes, $this->name);
+    $element = $this->createElement('text:p', $attributes);
 
     foreach ($this->histories as $history) {
       $node = $this->createTextNode($history);
