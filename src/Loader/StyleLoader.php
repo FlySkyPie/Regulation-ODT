@@ -168,7 +168,8 @@ class StyleLoader implements StyleLoaderInterface {
     $attributes = ['style:name' => '法規章節（段落樣式）', 'style:family' => 'paragraph'];
     $styleNode = $this->createElementWithAttribute('style:style', $attributes);
 
-    $styleParagraphPropertiesAttribute = ['fo:line-height' => '150%'];
+    $styleParagraphPropertiesAttribute = [
+        'fo:margin-top'=>'0.3in','fo:line-height' => '150%'];
     $styleParagraphPropertiesElement = $this->createElementWithAttribute(
             'style:paragraph-properties', $styleParagraphPropertiesAttribute);
 
