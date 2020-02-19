@@ -111,8 +111,6 @@ class StyleLoader implements StyleLoaderInterface {
     $parent->appendChild($styleNode);
   }
 
-
-  
   private function addChapterStyleTo(\DOMElement $parent) {
     $attributes = ['style:name' => '法規章節（文字樣式）', 'style:family' => 'text'];
     $styleNode = $this->createElementWithAttribute('style:style', $attributes);
@@ -165,13 +163,12 @@ class StyleLoader implements StyleLoaderInterface {
     $styleNode->appendChild($styleTextPropertiesElement);
     $parent->appendChild($styleNode);
   }
-  
-  
-      private function addChapterParagraphStyleTo(\DOMElement $parent) {
+
+  private function addChapterParagraphStyleTo(\DOMElement $parent) {
     $attributes = ['style:name' => '法規章節（段落樣式）', 'style:family' => 'paragraph'];
     $styleNode = $this->createElementWithAttribute('style:style', $attributes);
 
-    $styleParagraphPropertiesAttribute = [];
+    $styleParagraphPropertiesAttribute = ['fo:line-height' => '150%'];
     $styleParagraphPropertiesElement = $this->createElementWithAttribute(
             'style:paragraph-properties', $styleParagraphPropertiesAttribute);
 
@@ -190,12 +187,12 @@ class StyleLoader implements StyleLoaderInterface {
     $styleNode->appendChild($styleTextPropertiesElement);
     $parent->appendChild($styleNode);
   }
-  
-      private function addArticleParagraphStyleTo(\DOMElement $parent) {
+
+  private function addArticleParagraphStyleTo(\DOMElement $parent) {
     $attributes = ['style:name' => '法規條款（段落樣式）', 'style:family' => 'paragraph'];
     $styleNode = $this->createElementWithAttribute('style:style', $attributes);
 
-    $styleParagraphPropertiesAttribute = [];
+    $styleParagraphPropertiesAttribute = ['fo:line-height' => '150%'];
     $styleParagraphPropertiesElement = $this->createElementWithAttribute(
             'style:paragraph-properties', $styleParagraphPropertiesAttribute);
 
@@ -212,12 +209,12 @@ class StyleLoader implements StyleLoaderInterface {
     $styleNode->appendChild($styleTextPropertiesElement);
     $parent->appendChild($styleNode);
   }
-  
-      private function addListParagraphStyleTo(\DOMElement $parent) {
+
+  private function addListParagraphStyleTo(\DOMElement $parent) {
     $attributes = ['style:name' => '法規項次（段落樣式）', 'style:family' => 'paragraph'];
     $styleNode = $this->createElementWithAttribute('style:style', $attributes);
 
-    $styleParagraphPropertiesAttribute = [];
+    $styleParagraphPropertiesAttribute = ['fo:line-height' => '150%'];
     $styleParagraphPropertiesElement = $this->createElementWithAttribute(
             'style:paragraph-properties', $styleParagraphPropertiesAttribute);
 
@@ -262,8 +259,9 @@ class StyleLoader implements StyleLoaderInterface {
             'style:num-format' => '1, 2, 3, ...']
     ];
     $alignmentAttributes = [
-        [], ['fo:margin-left' => '0.75in',
-            'fo:text-indent' => '-0.75in'],
+        [], ['text:list-tab-stop-position' => '1in',
+            'fo:margin-left' => '1in',
+            'fo:text-indent' => '-1in'],
         ['fo:margin-left' => '0.75in'],
         ['fo:text-indent' => '-0.5in',
             'fo:margin-left' => '1.5in'],
