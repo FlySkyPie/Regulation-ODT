@@ -118,6 +118,7 @@ class RegulationLoader implements RegulationLoaderInterface {
 
   private function getListElement(string $key, array $array, int $level): \DOMElement {
     $itemElement = $this->getListItemElement($level);
+    $key = ($level === 2) ? '（' . $key . '）' : $key;
 
     $attribute = ['text:style-name' => $this->getStyleName($level)];
     $textElement = $this->createElement('text:p', $attribute, $key);

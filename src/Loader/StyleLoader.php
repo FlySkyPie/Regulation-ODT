@@ -291,7 +291,6 @@ class StyleLoader implements StyleLoaderInterface {
   private function createListLevelStyle(int $level, array $numberAttributes, array $alignmentAttributes) {
     $numberAttributes['text:level'] = \strval($level);
     $propertiesAttributes = ['text:list-level-position-and-space-mode' => 'label-alignment'];
-    //$alignmentAttributes['text:label-followed-by'] = 'listtab';
 
     $element3 = $this->createElementWithAttribute('style:list-level-label-alignment', $alignmentAttributes);
     $element2 = $this->createElementWithAttribute('style:list-level-properties', $propertiesAttributes);
