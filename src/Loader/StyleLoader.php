@@ -169,7 +169,7 @@ class StyleLoader implements StyleLoaderInterface {
     $styleNode = $this->createElementWithAttribute('style:style', $attributes);
 
     $styleParagraphPropertiesAttribute = [
-        'fo:margin-top'=>'0.3in','fo:line-height' => '150%'];
+        'fo:margin-top' => '0.3in', 'fo:line-height' => '150%'];
     $styleParagraphPropertiesElement = $this->createElementWithAttribute(
             'style:paragraph-properties', $styleParagraphPropertiesAttribute);
 
@@ -260,15 +260,21 @@ class StyleLoader implements StyleLoaderInterface {
             'style:num-format' => '1, 2, 3, ...']
     ];
     $alignmentAttributes = [
-        [], ['text:list-tab-stop-position' => '1in',
+        ['text:label-followed-by' => 'listtab'],
+        ['text:label-followed-by' => 'listtab',
+            'text:list-tab-stop-position' => '1in',
             'fo:margin-left' => '1in',
             'fo:text-indent' => '-1in'],
-        ['fo:margin-left' => '0.75in'],
-        ['fo:text-indent' => '-0.5in',
+        ['text:label-followed-by' => 'nothing',
+            'fo:margin-left' => '0.75in'],
+        ['text:label-followed-by' => 'nothing',
+            'fo:text-indent' => '-0.5in',
             'fo:margin-left' => '1.5in'],
-        ['fo:text-indent' => '-0.75in',
+        ['text:label-followed-by' => 'nothing',
+            'fo:text-indent' => '-0.75in',
             'fo:margin-left' => '2in'],
-        ['fo:text-indent' => '-0.5in',
+        ['text:label-followed-by' => 'nothing',
+            'fo:text-indent' => '-0.5in',
             'fo:margin-left' => '2.25in']
     ];
 
@@ -285,7 +291,7 @@ class StyleLoader implements StyleLoaderInterface {
   private function createListLevelStyle(int $level, array $numberAttributes, array $alignmentAttributes) {
     $numberAttributes['text:level'] = \strval($level);
     $propertiesAttributes = ['text:list-level-position-and-space-mode' => 'label-alignment'];
-    $alignmentAttributes['text:label-followed-by'] = 'listtab';
+    //$alignmentAttributes['text:label-followed-by'] = 'listtab';
 
     $element3 = $this->createElementWithAttribute('style:list-level-label-alignment', $alignmentAttributes);
     $element2 = $this->createElementWithAttribute('style:list-level-properties', $propertiesAttributes);
